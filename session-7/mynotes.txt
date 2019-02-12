@@ -1,0 +1,35 @@
+Here you will take your notes
+
+Client-server model
+    c: client
+    s: sever
+
+The client starts a communication and the sever generates a respond message with the info that the client is asking for.
+The sever can help many clients.
+The server is a program that answer to the request but if there are no clients it will wait till a client arrives.
+We always need the server because otherwise there will be errors.
+(*)computer:any device capable of executing code
+In the computer of the client there can be many programs and inside the server's computer too.
+We can have one computer running two programs: the client and the server.
+They are connected trough a network called internet.
+Inside the internet there are many isolated computers connected to each other inside different networks.
+All the computers connected have at least one network interface: IP Address
+When we connect to a different 'wifi' we have a new IP Address
+
+My phone IP address at URJC: 10.0.41.249
+ifconfig --> IP address of the computer: 212.128.253.88
+
+to see if the computer is alive: ping 8.8.8.8 --> each line is a different ping with the time it takes to answer.
+
+* ping time to 8.8.8.8: time=3.61 ms
+* ping time to my computer: time=0.066 ms
+* ping time to Veronica's computer: time=0.504 ms
+* ping time to my phone: time=35.0 ms
+
+It is not possible to have less ping time than this computer
+
+To identify the network interface for humans: ping www.google.com (URL) and then it will give you google's IP: 216.58.211.228
+* ping time to www.google.com: time=3.68 ms
+* ping to URJC: 192.168.46.45  time=2.31 ms
+
+Port is a number that refers to the different applications inside a machine; so we need two numbers to connect to the serve: the IP and the port
