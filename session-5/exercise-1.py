@@ -13,7 +13,7 @@ def count_bases(seq):
 seq = input("Please, introduce a sequence: ")
 dict_bases = count_bases(seq)
 
-
+print("This sequence is {} bases in length".format(len(seq)))
 for key in dict_bases:
 
     print("Base:", key)
