@@ -2,8 +2,8 @@ from Seq import Seq
 
 seq1 = Seq("ATTCGATCC")
 seq2 = Seq("AAAGG")
-seq3 = seq1.complement()
-seq4 = seq3.reverse()
+seq3 = Seq(seq1.complement())
+seq4 = Seq(seq3.reverse())
 
 seq_list = [seq1, seq2, seq3, seq4]
 counter = 1
