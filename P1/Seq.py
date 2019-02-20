@@ -27,14 +27,14 @@ class Seq:
 
         seq_complement = ''.join(list_complement)
 
-        return Seq(seq_complement)
+        return seq_complement
 
     def reverse(self):
         """Returns a new sequence that is the reverse of the current sequence"""
 
         seq_reverse = self.strbase[::-1]
 
-        return Seq(seq_reverse)
+        return seq_reverse
 
     def count(self, base):
         """Returns the number of times the base "base" appears in the sequence"""
