@@ -34,7 +34,7 @@ try:
         print("Message from client: {}".format(msg))
 
         # Send the message
-        message = "The sequence {} has been received".format(msg)
+        message = "Your sequence has been received!".format(msg)
         send_bytes = str.encode(message)
         # We must write bytes, not a string
         clientsocket.send(send_bytes)

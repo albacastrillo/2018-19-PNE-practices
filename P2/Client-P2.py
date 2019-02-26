@@ -23,12 +23,12 @@ while True:
     s.connect((IP, PORT))
 
     # Send the request message to the server
-    s.send(str.encode(seq3.strbase))
+    s.send(str.encode("The complement reverse of the sequence {} is: {}".format(seq1.strbase, seq3.strbase)))
 
     # Receive the servers response
     response = s.recv(2048).decode("utf-8")
 
     # Print the server's response
-    print(response)
+    print("Message from the server: {}".format(response))
 
     s.close()
