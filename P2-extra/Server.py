@@ -2,9 +2,8 @@ import socket
 from Seq import Seq
 
 # Configure the Server's IP and PORT
-# PORT = 8081
-PORT = 8080
-IP = "212.128.253.88"
+PORT = 8089
+IP = "212.128.253.108"
 
 MAX_OPEN_REQUESTS = 5
 
@@ -13,6 +12,7 @@ number_con = 0
 
 # Create an INET, STREAMing socket
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
 try:
     serversocket.bind((IP, PORT))
     # Become a server socket
@@ -34,10 +34,11 @@ try:
         msg = clientsocket.recv(2048).decode("utf-8")
         print("This is the sequence received from the client: {}".format(msg))
 
-        sequence = Seq(msg).complement()
-
         # Send the message
-        send_bytes = str.encode(sequence)
+        sequence = Seq(msg)
+        seq_result = sequence.complement()
+        send_bytes = str.encode("This is the complement of your sequence: {}".format(seq_result))
+
         # We must write bytes, not a string
         clientsocket.send(send_bytes)
         clientsocket.close()
