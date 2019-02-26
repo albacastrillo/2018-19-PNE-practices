@@ -10,7 +10,7 @@ counter = 1
 bases = ['A', 'C', 'T', 'G']
 
 for seq in seq_list:
-    print("Sequence", counter, ": {}".format(seq))
+    print("Sequence", counter, ": {}".format(seq.strbase))
     print("     Length: {}".format(seq.len()))
 
     for base in bases:
