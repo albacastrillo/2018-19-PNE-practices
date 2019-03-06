@@ -1,8 +1,8 @@
 import socket
 from Seq import Seq
 
-PORT = 8089
-IP = "212.128.253.89"
+PORT = 8000
+IP = "212.128.253.87"
 MAX_OPEN_REQUEST = 5
 
 
@@ -21,7 +21,6 @@ def process_client(cs):
         cs.close()
 
     # Sending the  message back to the client (because we are a server)
-
 
     cs.close()
 
@@ -60,6 +59,36 @@ def process_client(cs):
                     results.append(str(seq.count(bases)))
                 else:
                     cs.send(str.encode("ERROR"))
+                    cs.close()
+                    return True
+
+            elif 'percentage' in element:
+                bases = element[-1].upper()
+                if element[-1].upper in str(bases):
+                    results.append(str(seq.percentage(bases)))
+                else:
+                    cs.send(str.encode("ERROR"))
+                    cs.close()
+                    return True
+
+            elif element != Seq:
+                cs.send(str.encode("ERROR"))
+                cs.close()
+                return True
+
+    elif len(msg) == 1:
+        if seq.strbase == 'EXIT' or seq.strbase == 'exit':
+            print('Closed')
+            cs.send(str.encode("Server closed"))
+            cs.close()
+            return False
+
+    results = "\n".join(results)
+
+    # Send  the message back to the client
+    cs.send(str.encode(results))
+    cs.close()
+    return True
 
 
 # Create a socket for connecting to the clients
@@ -79,7 +108,10 @@ while True:
     # -- Process the client request
     print("Attending client; {}".format(address))
 
-    process_client(clientsocket)
+    if not process_client(clientsocket):
+        ready = False
+
+#    process_client(clientsocket)
 
     # Close the socket
     clientsocket.close()
