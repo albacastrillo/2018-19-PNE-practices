@@ -1,9 +1,11 @@
 import socket
 from Seq import Seq
 
+
 PORT = 8000
-IP = "212.128.253.87"
+IP = "192.168.56.1"
 MAX_OPEN_REQUEST = 5
+
 
 
 def process_client(cs):
@@ -13,80 +15,63 @@ def process_client(cs):
 
     print("Message from the client: {}".format(msg))
 
-    # Split the request into the commands
-    cmsg = msg.split('\n')
-
-    if cmsg[0] == '':
+    if msg == '\n':
         cs.send(str.encode("ALIVE"))
         cs.close()
+        return True
 
-    # Sending the  message back to the client (because we are a server)
-
-    cs.close()
-
-
-    list_msg = msg[1:]
+    # Split the request into the commands
+    split_msg = msg.split()
+#    list_oper = split_msg[1:]
     results = []
     bases = 'A', 'C', 'G', 'T'
+    valid = str(bases)
     counter = 0
-    errorcounter = 0
+    operations = 'len', 'complement', 'reverse', 'countA', 'countT', 'countG', 'countC', 'percA', 'percT', 'percG', 'percC'
 
-    for i in msg[0].upper():
+    for i in split_msg[0].upper():
         if i in str(bases):
             counter += 1
-        elif i not in str(bases):
-            errorcounter += 1
-
-    if len(msg[0].upper()) == counter:
+    if len(split_msg[0]) == counter:
         results.append("OK")
-
     else:
         results.append("ERROR")
 
-    if len(msg) > 1:
-        for element in list_msg:
+    if len(split_msg) > 1:
+        for element in split_msg[1:]:
             print(element)
             if element == 'len':
-                results.append(str(seq.len()))
+                results.append(str(Seq(split_msg[0]).len()))
             elif element == 'complement':
-                results.append(seq.complement().strbase)
+                results.append(Seq(split_msg[0]).complement())
             elif element == 'reverse':
-                results.append(seq.reverse(strbase))
-
+                results.append(Seq(split_msg[0]).reverse())
             elif 'count' in element:
-                bases = element[-1].upper()
-                if element[-1].upper() in str(bases):
-                    results.append(str(seq.count(bases)))
+                bases = element[-1]
+                if element[-1] in valid:
+                    results.append(str(Seq(split_msg[0]).count(bases)))
                 else:
                     cs.send(str.encode("ERROR"))
                     cs.close()
                     return True
-
-            elif 'percentage' in element:
-                bases = element[-1].upper()
-                if element[-1].upper in str(bases):
-                    results.append(str(seq.percentage(bases)))
+            elif 'perc' in element:
+                bases = element[-1]
+                if element[-1] in str(bases):
+                    results.append(str(Seq(split_msg[0]).perc(bases)))
                 else:
                     cs.send(str.encode("ERROR"))
                     cs.close()
                     return True
-
-            elif element != Seq:
+            elif element not in operations:
                 cs.send(str.encode("ERROR"))
                 cs.close()
                 return True
 
-    elif len(msg) == 1:
-        if seq.strbase == 'EXIT' or seq.strbase == 'exit':
-            print('Closed')
-            cs.send(str.encode("Server closed"))
-            cs.close()
-            return False
-
-    results = "\n".join(results)
+    print(results)
+    final_result = "\n".join(results)
 
     # Send  the message back to the client
-    cs.send(str.encode(results))
+    cs.send(str.encode(final_result))
     cs.close()
     return True
 
@@ -100,18 +85,19 @@ serversocket.listen(MAX_OPEN_REQUEST)
 
 print("Socket ready: {}".format(serversocket))
 
-while True:
+ready = True
+while ready:
 
     print("Waiting for connections at : {}, {}".format(IP,PORT))
     (clientsocket, address) = serversocket.accept()
 
-    # -- Process the client request
-    print("Attending client; {}".format(address))
+    # Process the client request
+    print("Attending client: {}".format(address))
 
     if not process_client(clientsocket):
         ready = False
 
-#    process_client(clientsocket)
-
     # Close the socket
     clientsocket.close()
+
+
