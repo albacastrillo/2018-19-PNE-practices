@@ -3,12 +3,13 @@ import socketserver
 
 PORT = 8000
 
+
 class TestHandler(http.server.BaseHTTPRequestHandler):
 
     def do_GET(self):
         print("GET received")
 
-        print("Requesr line:" + self.requestline)
+        print("Request line:" + self.requestline)
         print("     Cmd: " + self.command)
         print("     Path: " + self.path)
 
@@ -22,6 +23,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         self.wfile.write(str.encode(content))
 
         return
+
 
 Handler = TestHandler
 
