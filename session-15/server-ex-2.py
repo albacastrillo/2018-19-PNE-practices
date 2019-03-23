@@ -2,7 +2,7 @@ import http.server
 import socketserver
 import termcolor
 
-PORT = 8009
+PORT = 8000
 
 
 class TestHandler(http.server.BaseHTTPRequestHandler):
@@ -13,18 +13,25 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         termcolor.cprint(self.requestline, 'green')
 
         if self.path == "/" or self.path == "/echo":
-            f = open("main-ex-1.html", 'r')
+            f = open("main-ex-2.html", 'r')
             contents = f.read()
 
         else:
             file = open("error-ex-1.html", 'r')
             contents = file.read()
 
-        if self.path.find('=') != -1:
-            msg = self.path[self.path.find('=')+1:]
-            file = open("msg-ex-1.html")
+        if self.path.find("=") != -1:
+            if self.path.find("&") != -1:
+                i2 = self.path.find("&")
+                msg = self.path[self.path.find("=") + 1:i2]
+                msg = msg.replace("+", " ")
+                msg = msg.upper()
+            else:
+                msg = self.path[self.path.find("=") + 1:]
+
+            file = open("msg-ex-2.html", "r")
             contents = file.read()
-            contents = contents.replace("msg", msg)
+            contents = contents.replace('msg', msg)
 
         # 200 means that everything is okay
         self.send_response(200)
