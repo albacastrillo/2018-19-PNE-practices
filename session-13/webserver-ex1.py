@@ -13,7 +13,9 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         print("     Cmd: " + self.command)
         print("     Path: " + self.path)
 
-        content = "I am the happy server!"
+        f = open("index-ex1.html", "r")
+        content = f.read()
+        f.close()
 
         self.send_response(200)
         self.send_header('Content-Type', 'text/plain')
