@@ -22,17 +22,20 @@ def doing(msg):
 
     operations.update({"Sequence": seq.strbase})
 
-    # The function makes all the computations
+    # Doing computations
     base = ""
     for request in msg:
         if "base" in request:
             base += request[-1]
         elif "count" in request:
-            operations.update("Number of {}'s: {}".format(base, seq.count(base)))
+            operation = request.split("=")[-1]
+            operations.update({operation + base: seq.count(base)})
         elif "perc" in request:
-            operations.update("Percentage of {}'s: {}".format(base, seq.perc(base)))
+            operation = request.split("=")[-1]
+            operations.update({operation + base: seq.perc(base)})
         elif request == "chk=on":
-            operations.update("Len: " + seq.len())
+            operation = "len"
+            operations.update({operation: seq.len()})
 
     return operations
 
