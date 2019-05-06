@@ -14,7 +14,8 @@ for seq in seq_list:
     print("     Length: {}".format(seq.len()))
 
     for base in bases:
-        print("{}    Bases count: {}".format(base, seq.count(base)))
-        print("     Bases percentage: {}".format(seq.perc(base)))
+        print(base +":")
+        print("  Bases count: {}".format(seq.count(base)))
+        print("  Bases percentage: {}".format(seq.perc(base)))
     counter += 1
 
