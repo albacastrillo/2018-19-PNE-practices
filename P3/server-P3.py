@@ -7,7 +7,6 @@ IP = "192.168.56.1"
 MAX_OPEN_REQUEST = 5
 
 
-
 def process_client(cs):
 
     # Reading the message from the client
@@ -41,15 +40,15 @@ def process_client(cs):
         for element in split_msg[1:]:
             print(element)
             if element == 'len':
-                results.append(str(Seq(split_msg[0]).len()))
+                results.append(element + ": " + str(Seq(split_msg[0]).len()))
             elif element == 'complement':
-                results.append(Seq(split_msg[0]).complement())
+                results.append(element + ": " + Seq(split_msg[0]).complement())
             elif element == 'reverse':
-                results.append(Seq(split_msg[0]).reverse())
+                results.append(element + ": " + Seq(split_msg[0]).reverse())
             elif 'count' in element:
                 bases = element[-1]
                 if element[-1] in valid:
-                    results.append(str(Seq(split_msg[0]).count(bases)))
+                    results.append(element + ": " +  str(Seq(split_msg[0]).count(bases)))
                 else:
                     cs.send(str.encode("ERROR"))
                     cs.close()
@@ -57,7 +56,7 @@ def process_client(cs):
             elif 'perc' in element:
                 bases = element[-1]
                 if element[-1] in str(bases):
-                    results.append(str(Seq(split_msg[0]).perc(bases)))
+                    results.append(element + ": " +  str(Seq(split_msg[0]).perc(bases)))
                 else:
                     cs.send(str.encode("ERROR"))
                     cs.close()

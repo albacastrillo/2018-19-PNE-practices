@@ -5,8 +5,11 @@ PORT = 8000
 IP = "192.168.56.1"
 
 # Message from the client
-msg = """ACTG
+msg = """
+ACTG
 len
+reverse
+countC
 """
 
 # Create a socket  for communicating with the server
