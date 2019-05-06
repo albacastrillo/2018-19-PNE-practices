@@ -3,74 +3,73 @@ import socketserver
 import termcolor
 from Seq import Seq
 
-PORT = 8009
+PORT = 8000
 
 
-def doing(msg):
-    operations = {}
+def operations(msg):
     msg = msg.split("&")
-    seq = msg.pop(0).split("=")[-1].upper()
-    bases = 'A', 'C', 'T', 'G'
+    seq = Seq(msg.pop(0).split("=")[-1].upper())
+    actions = {}
+    bases = "ACTG"
 
-    # Check if the characters of the sequence are bases
-    for base in seq:
-        if base not in bases:
-            operations = "ERROR"
-        return operations
+    # Check if the bases are correct
+    if not all(base in bases for base in seq.strbase):
+        actions = "ERROR"
+        return actions
 
-    seq = Seq(seq)
+    actions.update({"Sequence": seq.strbase})
 
-    operations.update({"Sequence": seq.strbase})
-
-    # Doing computations
+    # Doing all the operations
     base = ""
     for request in msg:
+        print(request)
         if "base" in request:
             base += request[-1]
         elif "count" in request:
-            operation = request.split("=")[-1]
-            operations.update({operation + base: seq.count(base)})
+            action = seq.count(base)
+            actions.update({"Number of " + base + " ": action})
         elif "perc" in request:
-            operation = request.split("=")[-1]
-            operations.update({operation + base: seq.perc(base)})
+            action = seq.perc(base)
+            actions.update({"Percentage of " + base + " ": action})
         elif request == "chk=on":
-            operation = "len"
-            operations.update({operation: seq.len()})
-
-    return operations
+            action = seq.len()
+            actions.update({"Length": action})
+    return actions
 
 
 class TestHandler(http.server.BaseHTTPRequestHandler):
 
     def do_GET(self):
-        # -- printing the request line
+        # -- printing the request  line
         termcolor.cprint(self.requestline, "green")
-        request = self.requestline.split()[1]
-        process = request.split("?")[-1]
+        demand = self.requestline.split()[1]
+        print(demand)
+        progresses = demand.split("?")[-1]
+        print(progresses)
 
         if self.path.startswith("/seq"):
-            test = doing(process)
+            test = operations(progresses)
             if test == "ERROR":
                 f = open("error-P6.html", 'r')
                 contents = f.read()
                 f.close()
             else:
-                results = ""
+                result = ""
                 for key, value in test.items():
-                    results += "<p>" + key + " : " + str(value) + "</p>"
+                    result += "<p>" + key + " : " + str(value) + "</p>"
 
                 contents = """<!DOCTYPE html>
                             <html lang="en">
                             <head>
                                 <meta charset="UTF-8">
-                                <title>Obtained results</title>
+                                <title>Results obtained</title>
                             </head>
                             <body>
-                             <h1>Results</h1>
+                             <h1>Result of operations</h1>
                               {}
-                              <a href="/">[Main page]</a>
+                              <a href="/">Main page</a>
                             </body>
-                            </html>""".format(results)
+                            </html>""".format(result)
 
         elif self.path == "/":
             f = open("main-P6.html", 'r')
@@ -83,16 +82,13 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             f.close()
 
         self.send_response(200)
-
         self.send_header('Content-Type', 'text/html')
         self.send_header('Content-length', len(str.encode(contents)))
         self.end_headers()
-
-        # -- Sending the body of the response message
         self.wfile.write(str.encode(contents))
 
 
-# -- Main programme
+# -- Main program
 with socketserver.TCPServer(("", PORT), TestHandler) as httpd:
     print("Serving at PORT: {} ".format(PORT))
     try:
@@ -101,4 +97,4 @@ with socketserver.TCPServer(("", PORT), TestHandler) as httpd:
     except KeyboardInterrupt:
         httpd.server_close()
 
-print("The server is stopped")
+print("Server stopped")
